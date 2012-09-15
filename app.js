@@ -3,7 +3,12 @@
  * Module dependencies.
  */
 
-var express = require('express');
+var express = require('express')
+, mongoose = require('mongoose');
+
+//mongoose.connect("mongo://localhost/hashtackle"); // Old and busted
+mongoose.connect("mongodb://nodeuser:oompabeard@staff.mongohq.com:10066/hashtackle"); // New hotness
+
 
 var app = module.exports = express.createServer();
 
