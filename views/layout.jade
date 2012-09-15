@@ -1,0 +1,25 @@
+!!! 5
+html
+    head
+        meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+        meta(charset='utf-8')
+        meta(http-equiv='X-UA-Compatible', content='IE=edge,chrome=1')
+        title= "#tackle - " + title
+        meta(name='description', content='')
+        meta(name='author', content='')
+        meta(name='viewport', content='width=device-width')
+        link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+        //- link(href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css", rel="stylesheet", type="text/css")
+        link(rel='stylesheet', href='/stylesheets/bootstrap-responsive.min.css')
+        link(rel='stylesheet', href='/stylesheets/style.css')
+        block scripts
+            script(src='/javascripts/bootstrap.min.js')
+            // script(src='//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
+            // script(src='//ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js')
+            script(src='/javascripts/jquery.min.js')
+            script(src='/javascripts/jquery-ui.min.js')
+    body
+        .container
+            block content
+            footer
+                p © #tackle 2012
