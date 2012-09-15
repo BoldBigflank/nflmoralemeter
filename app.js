@@ -7,7 +7,7 @@ var express = require('express')
 , mongoose = require('mongoose');
 
 //mongoose.connect("mongo://localhost/hashtackle"); // Old and busted
-mongoose.connect("mongodb://nodeuser:oompabeard@staff.mongohq.com:10066/hashtackle"); // New hotness
+mongoose.connect("mongodb://nodeuser:n0Tebowing@alex.mongohq.com:10099/hashtackle"); // New hotness
 
 
 var app = module.exports = express.createServer();
@@ -40,6 +40,8 @@ var site = require('./routes/site');
 app.get('/', site.index)
 
 app.get('/game', site.game)
+
+app.get('/update', site.update)
 
 app.listen(3000, function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

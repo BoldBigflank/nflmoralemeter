@@ -17,3 +17,16 @@ exports.game = function(req, res){
 	})
 	
 }
+
+exports.update = function(req, res){
+	var scrape = require('../espn.js')
+	scrape.updateDatabase(function(cb){
+		res.send(cb, 200);
+	});
+	// Use espn to get teams, update db
+	// Each team, Use espn to get active players, update
+	// From db: get every player without twitter; foreach tweeting-athletes, update everyone on the db list
+		// Pull player page, get twitter name, update Player db entry
+	// Use twitter to populate each tweet
+
+}

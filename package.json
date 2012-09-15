@@ -7,6 +7,10 @@
     , "jade": ">= 0.0.1"
     , "mongodb": ">= 0.9.6-7"
     , "mongoose": ">= 2.6.4"
+    , "async": "0.1.15"
+    , "request": "2.9.153"
+    , "jsdom": "0.2.13"
+    , "contextify": "0.1.x"
   },
   "subdomain": "app",
   "scripts": {
