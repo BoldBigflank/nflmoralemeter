@@ -43,6 +43,8 @@ app.get('/game', site.game)
 
 app.get('/update', site.update)
 
-app.listen(3000, function(){
+var port = process.env.PORT || 3000
+
+app.listen(port, function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });

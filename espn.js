@@ -45,22 +45,31 @@ exports.updateTwitter = function(cb){
 	Player.find( { 'twitter': null }).exec( function(err, doc){
 		if(err) console.log(err)
 		var players = doc
-		async.forEach(players, function(player){
-			var url = "http://www.tweeting-athletes.com/" + player.link
-			request(url, function(error, response, body){
-				jsdom.env(response.body, [
-		                'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'
-		            ],
-		            function(errors, win){
-		            	var $ = win.$
-		            	if(errors) console.log("Error", errors)
-		            	console.log(player.name, $("a.twitter-follow-button").attr('href'))
-		            	player.twitter = $("a.twitter-follow-button").attr('href')
-		            	player.save()
-		            })
+		if(players.length > 0){
+			async.forEachLimit(players, 10, function(player, callback){
+				var url = "http://www.tweeting-athletes.com/" + player.link
+				request(url, function(error, response, body){
+					jsdom.env(response.body, [
+			                'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'
+			            ],
+			            function(errors, win){
+			            	var $ = win.$
+			            	if(errors) console.log("Error", errors)
+			            	console.log(player.name, $("a.twitter-follow-button").attr('href'))
+			            	player.twitter = $("a.twitter-follow-button").attr('href')
+			            	player.save()
+			            	callback(null)
+			            })
+				})
 			})
-		})
+		}
+		
 		cb("Set in motion")
 	} )
+
+}
+
+exports.updateTweets = function (player, cb){
+	// only one call per 24 seconds to keep from hitting the limit.
 
 }
