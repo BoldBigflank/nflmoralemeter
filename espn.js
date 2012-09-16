@@ -75,18 +75,11 @@ exports.updateTweets = function (cb){
 	var util = require('util'),
 	    twitter = require('twitter');
 	// Placemat
-	// var twit = new twitter({
-	//     consumer_key: 'uA06yZhNfwHv7ntaK9YAg',
-	//     consumer_secret: 'rKezWLcbf1ysQ889phi12xCNft9yOmjKOVM8o4Xi24',
-	//     access_token_key: '74100146-ZQOJaYeuublgGw1VtpyeSKCoJzJmpRnJivLCk4RI',
-	//     access_token_secret: '9tzkMkj2PJpP9u5KDHo517TG9MpDEPajYkp5fVqDg8'
-	// });
-	// i.TV
 	var twit = new twitter({
-	    consumer_key: 'jCr6ZwTxs5UsvjB4EVktxQ',
-	    consumer_secret: 'UgP49KU06PKka4Zhv3hf8uwMV1O5zvWD2Z4NVBGm4',
-	    access_token_key: '22101689-2rnZu6xhEa4DeW1rww3ajB7OiHFyMoQXQR3Y7ZvA7',
-	    access_token_secret: 'M0WQhGyVVIagzP8kktm7hSpGWYRZpBQUSLA4U2TAg'
+	    consumer_key: 'uA06yZhNfwHv7ntaK9YAg',
+	    consumer_secret: 'rKezWLcbf1ysQ889phi12xCNft9yOmjKOVM8o4Xi24',
+	    access_token_key: '74100146-ZQOJaYeuublgGw1VtpyeSKCoJzJmpRnJivLCk4RI',
+	    access_token_secret: '9tzkMkj2PJpP9u5KDHo517TG9MpDEPajYkp5fVqDg8'
 	});
 
 

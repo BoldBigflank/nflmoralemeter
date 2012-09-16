@@ -74,6 +74,7 @@ function analyzeTeam(teamName, cb){
 	var teamAnalysis = {
 		numTweets: 0,
 		numPeople: 0,
+		dietyReference: 0
 	}
 	var totalSentiment = 0;
 
@@ -105,6 +106,11 @@ function analyzeTeam(teamName, cb){
 			})
 			teamAnalysis.numTweets = tweets.length
 			_.each(tweets, function(tweet){
+				if(tweet.text.match(/pray/i) || 
+					tweet.text.match(/faith/i) || 
+					tweet.text.match(/lord/i) || 
+					tweet.text.match(/god/i) )
+					teamAnalysis.dietyReference++;
 				totalSentiment += tweet.polarity
 			})
 			teamAnalysis.polarity = totalSentiment / teamAnalysis.numTweets
