@@ -8,7 +8,7 @@ var PlayerSchema = new Schema({
 	position: { type: String, default: null },
 	link: { type: String, default: null, unique: true },
 	twitter: { type: String, default: null },
-	tweets : [{ type: Schema.ObjectId, ref: 'Tweet' }]
+	last_updated: {type: Date, default: null}
 });
 
 module.exports = mongoose.model('Player', PlayerSchema);

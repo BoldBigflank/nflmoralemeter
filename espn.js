@@ -4,8 +4,10 @@ var sharedSecret = "7dBCpV7J3n8W8s5cnP62UnBq";
 var jsdom = require('jsdom')
 , request = require('request')
 , async = require('async')
+, _ = require('underscore')
 
 var Player = require('./models/player')
+var Tweet = require('./models/tweet')
 
 exports.updateDatabase = function(cb){
 	// http://api.espn.com/:version/:resource/:method?apikey=:yourkey
@@ -69,7 +71,73 @@ exports.updateTwitter = function(cb){
 
 }
 
-exports.updateTweets = function (player, cb){
+exports.updateTweets = function (cb){
+	var util = require('util'),
+	    twitter = require('twitter');
+	var twit = new twitter({
+	    consumer_key: 'uA06yZhNfwHv7ntaK9YAg',
+	    consumer_secret: 'rKezWLcbf1ysQ889phi12xCNft9yOmjKOVM8o4Xi24',
+	    access_token_key: '74100146-ZQOJaYeuublgGw1VtpyeSKCoJzJmpRnJivLCk4RI',
+	    access_token_secret: '9tzkMkj2PJpP9u5KDHo517TG9MpDEPajYkp5fVqDg8'
+	});
 	// only one call per 24 seconds to keep from hitting the limit.
+	// Get 150 people not updated
+	Player.find({ last_updated:null }).limit(10).exec(function(err, doc){
+		if(err) return cb(err)
+		var players = doc
+		if(players.length > 0){
+			async.forEach(players, function(player, callback){
+				// Get the twitter feed for that person
+				var username = player.twitter.replace("https://twitter.com/", "")
+				twit.get('/statuses/user_timeline.json', {screen_name: username, count:200 }, function(error, data) {
+					if(error){
+						console.log(util.inspect(error))
+					} else if (data.length > 0) {
+						for (x in data){
+							if(data[x] && data[x].user){
+								var tweet = new Tweet( data[x] )
+								tweet.screen_name = data[x].user.screen_name
+								tweet.name = player.name
+								tweet.save()
+							}
+						}
+						player.last_updated = Date.now()
+						player.save()
+						callback(null)
+					}
+				});
+			})
+		}
+	})
+	cb("As you wish")
+}
 
+
+exports.setPolarity = function(cb){
+	var uri = "http://www.sentiment140.com/api/bulkClassifyJson"
+	Tweet.find({polarity: null}).limit(1000).select('text').exec(function(err, tweets){
+		var body = {data: tweets}
+		//console.log(body)
+		uri = "http://www.sentiment140.com/api/bulkClassifyJson"
+		request.post({
+			uri: uri,
+			method: "POST",
+			body: body,
+			json: true
+
+		}, function(error, response, body){
+			var i = 0;
+			_.each(tweets, function(tweet){
+				var updatedTweet = _.find(response.body.data, function(tweetResponse){
+					return tweet._id == tweetResponse._id
+				})
+				tweet.polarity = updatedTweet.polarity
+				tweet.save()
+				i++
+				if(i%100 == 0) console.log(i)
+
+			})
+		})
+		cb(null)
+	})
 }

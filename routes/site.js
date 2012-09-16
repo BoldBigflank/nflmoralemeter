@@ -32,3 +32,16 @@ exports.update = function(req, res){
 	// Use twitter to populate each tweet
 
 }
+
+exports.updateTweets = function(req, res){
+	var scrape = require("../espn.js")
+	scrape.updateTweets(function(cb){
+		res.send(cb, 200)
+	})
+}
+exports.setPolarity = function(req, res){
+	var scrape = require("../espn.js")
+	scrape.setPolarity(function(cb){
+		res.send(cb, 200)
+	})
+}
