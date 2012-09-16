@@ -44,7 +44,7 @@ app.get('/game', site.game)
 app.get('/update', site.update)
 app.get('/updateTweets', site.updateTweets)
 app.get('/setPolarity', site.setPolarity)
-
+app.get('/matchup', site.matchup)
 
 
 var port = process.env.PORT || 3000
