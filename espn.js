@@ -132,7 +132,9 @@ exports.updateTweets = function (cb){
 
 exports.setPolarity = function(cb){
 	var uri = "http://www.sentiment140.com/api/bulkClassifyJson"
-	Tweet.find({polarity: null}).limit(1000).select('text').exec(function(err, tweets){
+	Tweet.find({polarity: null}).select('text').exec(function(err, tweets){
+		var i = 0;
+
 		var body = {data: tweets}
 		//console.log(body)
 		uri = "http://www.sentiment140.com/api/bulkClassifyJson"
@@ -143,18 +145,23 @@ exports.setPolarity = function(cb){
 			json: true
 
 		}, function(error, response, body){
-			var i = 0;
-			_.each(tweets, function(tweet){
-				var updatedTweet = _.find(response.body.data, function(tweetResponse){
-					return tweet._id == tweetResponse._id
-				})
-				tweet.polarity = updatedTweet.polarity
-				tweet.save()
-				i++
-				if(i%100 == 0) console.log(i)
+			_.each(tweets, function(tweet, num){
+				var updatedTweet = response.body.data[num]
+				// var updatedTweet = _.find(response.body.data, function(tweetResponse){
+				// 	return tweet._id.toString() == tweetResponse._id
+				// })
+				if(updatedTweet){
+					tweet.polarity = updatedTweet.polarity
+					tweet.save()
+					i++
+					if(i%100 == 0) console.log(i)
+				}
 
 			})
 		})
+	
+
+
 		cb(null)
 	})
 }

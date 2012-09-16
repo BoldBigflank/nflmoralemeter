@@ -49,13 +49,24 @@ exports.setPolarity = function(req, res){
 exports.matchup = function(req, res){
 	var team1 = req.query.team1
 	var team2 = req.query.team2
-	analyzeTeam(team1, function(team1Analysis){
-		analyzeTeam(team2, function(team2Analysis){
-			// Render a template to display the data
-			//res.render
-			res.send("It is doen", 200)
-		})
+	var Player = require('../models/player')
+	Player.collection.distinct('team', function(err, teams){
+		for (x in teams){
+			console.log(teams[x])
+			analyzeTeam(teams[x], function(teamAnalysis){
+
+			})
+		}
 	})
+	res.send("done", 200)
+
+	// analyzeTeam(team1, function(team1Analysis){
+	// 	analyzeTeam(team2, function(team2Analysis){
+	// 		// Render a template to display the data
+	// 		//res.render
+	// 		res.send("It is doen", 200)
+	// 	})
+	// })
 
 }
 
@@ -78,20 +89,19 @@ function analyzeTeam(teamName, cb){
 
 	// Get the players for a team
 	console.log("team", teamName)
-	var patt = new RegExp(teamName + '.*', 'i')
+	var patt = new RegExp('^' + teamName + '.*', 'i')
 	Player.find({team: { $regex : patt }}).exec(function(err, players){
 		if(err) console.log(err)
 		console.log("found", players.length, "players")
 		teamAnalysis.numPeople = players.length
 		var screenNames = _.map(players, function(player){ return player.twitter.replace("https://twitter.com/", "")})
-		
 		// Get the tweets for each player
 		Tweet.find({screen_name: { $in : screenNames } }).exec(function(err, tweets){
 			if(err) console.log(err)
 			console.log("found", tweets.length, "tweets")
 			tweets = _.filter(tweets, function(tweet){
 				var d = new Date(tweet.created_at).getTime()
-				return (d < oneWeekAgo && d > twoWeeksAgo)
+				return (d < now && d > oneWeekAgo)
 			})
 			teamAnalysis.numTweets = tweets.length
 			_.each(tweets, function(tweet){
