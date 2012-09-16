@@ -26,16 +26,13 @@ exports.updateDatabase = function(cb){
         				var name = $(this).find( ".name").text().trim()
         				var link = $(this).find( ".name > a").attr('href')
         				var position = $(this).find( ".group").text().trim()
-        				console.log(team, "->", name);
         				var newPlayer = new Player({
         					name: name
         					, team: team
         					, link: link
         					, position: position
         				});
-        				newPlayer.save(function(err){
-        					if(err) console.log(err);
-        				});
+        				newPlayer.save();
         			}
         		})
         	
@@ -44,17 +41,26 @@ exports.updateDatabase = function(cb){
 	})
 }
 
-exports.updateTwitter = function(){
+exports.updateTwitter = function(cb){
 	Player.find( { 'twitter': null }).exec( function(err, doc){
 		if(err) console.log(err)
 		var players = doc
 		async.forEach(players, function(player){
-			var url = "http://http://www.tweeting-athletes.com/" + player.link
-			request(url, function(error, request, body){
-
+			var url = "http://www.tweeting-athletes.com/" + player.link
+			request(url, function(error, response, body){
+				jsdom.env(response.body, [
+		                'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'
+		            ],
+		            function(errors, win){
+		            	var $ = win.$
+		            	if(errors) console.log("Error", errors)
+		            	console.log(player.name, $("a.twitter-follow-button").attr('href'))
+		            	player.twitter = $("a.twitter-follow-button").attr('href')
+		            	player.save()
+		            })
+			})
 		})
-		
-		})
+		cb("Set in motion")
 	} )
 
 }

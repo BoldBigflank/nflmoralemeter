@@ -21,7 +21,9 @@ exports.game = function(req, res){
 exports.update = function(req, res){
 	var scrape = require('../espn.js')
 	scrape.updateDatabase(function(cb){
-		res.send(cb, 200);
+		scrape.updateTwitter(function(cb){
+			res.send(cb, 200);
+		})
 	});
 	// Use espn to get teams, update db
 	// Each team, Use espn to get active players, update
